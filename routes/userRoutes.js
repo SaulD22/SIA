@@ -57,6 +57,7 @@ module.exports = function (app) {
 
     app.post('/users', verificarApiKey, (req, res) => {
         const userData = {
+            id: req.body.id,
             dato: req.body.dato,
             segundo: req.body.segundo
         };
