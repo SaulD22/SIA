@@ -46,7 +46,7 @@ userModel.getUsers = (callback) => {
 };
 */
 userModel.insertUser = (userData, callback) => {
-	rows = connection.insertData(userData.dato, userData.segundo, 'INSERT INTO sensor (id, dato, segundo) VALUES (0, ?, ?)', callback);
+	rows = connection.insertData(userData.dato, userData.segundo, 'INSERT INTO sensor (id, dato, segundo) VALUES (?, ?, ?)', callback);
 }
 
 userModel.insertResult = (userData, callback) => {
