@@ -48,9 +48,9 @@ class Connection{
         }) 
     }
 
-    async insertData(dato, segundo, myquery, callback) {
+    async insertData(values, myquery, callback) {
         return new Promise((resolve, reject) => {
-            this.pool.query(myquery, [dato, segundo], (err, result, fields) => {
+            this.pool.query(myquery, values, (err, result, fields) => {
                 if (err) {
                     reject(err)
                     callback(err, null)
