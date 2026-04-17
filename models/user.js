@@ -29,6 +29,14 @@ userModel.getUsers = (callback) => {
 	rows = connection.getData('SELECT * FROM sensor', callback);
 }
 
+userModel.getAccess = (callback) => {
+	rows = connection.getData('SELECT * FROM accesos', callback);
+}
+
+userModel.getRegistro = (callback) => {
+	rows = connection.getData('SELECT * FROM registro', callback);
+}
+
 /*
 userModel.getUsers = (callback) => {
 	if( connection ){
@@ -57,6 +65,22 @@ userModel.insertResult = (userData, callback) => {
 	connection.insertData(
 		[userData.id, userData.result],
 		'INSERT INTO result (id, info) VALUES (?, ?)',
+		callback
+	);
+}
+
+userModel.insertAccess = (userData, callback) => {
+	connection.insertData(
+		[userData.id_usuario],
+		'INSERT INTO accesos (id_usuario) VALUES (?)',
+		callback
+	);
+}
+
+userModel.insertRegistro = (userData, callback) => {
+	connection.insertData(
+		[userData.id, userData.nombre],
+		'INSERT INTO registro (id, nombre) VALUES (?, ?)',
 		callback
 	);
 }
