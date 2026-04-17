@@ -97,6 +97,15 @@ userModel.insertRegistro = (userData, callback) => {
 	);
 }
 
+userModel.insertTabla = (userData, callback) => {
+	connection.insertData(
+		[userData.id, userData.nombre],
+		'INSERT INTO reportes_graficas (tipo_grafica, nombre_archivo, formato_imagen, datos_binarios) VALUES (?, ?, ?, ?)',
+		callback
+	);
+}
+
+
 /*
 userModel.insertUser = (userData, callback) => {
 	if( connection ){

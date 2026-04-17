@@ -139,4 +139,28 @@ module.exports = function (app) {
             }
         });
     });
+
+        app.post('/reporte', verificarApiKey, (req, res) => {
+        const userData = {
+            tipo_grafica: req.body.tipo_grafica,
+            nombre_archivo: req.body.nombre_archivo,
+            formato_imagen: req.body.formato_imagen,
+            datos_binarios: req.body.datos_binarios
+        };
+
+        User.insertTabla(userData, (err, data) => {
+            if (data && data.affectedRows) {
+                res.status(200).json({
+                    success: true,
+                    msg: 'dato insertado',
+                    data: data
+                });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    msg: 'Error'
+                });
+            }
+        });
+    });
 }
