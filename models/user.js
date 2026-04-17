@@ -37,6 +37,10 @@ userModel.getRegistro = (callback) => {
 	rows = connection.getData('SELECT * FROM registro', callback);
 }
 
+userModel.getInformacion = (callback) => {
+	rows = connection.getData('SELECT a.id AS acceso_id, r.nombre AS nombre_usuario, a.fecha AS fecha_acceso FROM accesos a INNER JOIN registro r ON a.id_usuario = r.id;', callback);
+}
+
 /*
 userModel.getUsers = (callback) => {
 	if( connection ){

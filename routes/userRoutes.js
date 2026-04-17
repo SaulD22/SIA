@@ -45,6 +45,12 @@ module.exports = function (app) {
         });
     });
 
+        app.get('/informacion', (req, res)=>{
+        User.getRegistro((err, data) => {
+            res.json(data)
+        });
+    });
+
     app.post('/metrics', verificarApiKey, (req, res) => {
         const userData = {
             id: req.body.id,
