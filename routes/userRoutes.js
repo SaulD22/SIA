@@ -40,7 +40,7 @@ module.exports = function (app) {
     });
 
         app.get('/registros', (req, res)=>{
-        User.getAccess((err, data) => {
+        User.getRegistro((err, data) => {
             res.json(data)
         });
     });

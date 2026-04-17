@@ -85,6 +85,14 @@ userModel.insertRegistro = (userData, callback) => {
 	);
 }
 
+userModel.insertRegistro = (userData, callback) => {
+	connection.insertData(
+		[userData.id, userData.nombre],
+		'INSERT INTO registro (id, nombre) VALUES (?, ?)',
+		callback
+	);
+}
+
 /*
 userModel.insertUser = (userData, callback) => {
 	if( connection ){
