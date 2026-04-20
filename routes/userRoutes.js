@@ -39,8 +39,14 @@ module.exports = function (app) {
         });
     });
 
-        app.get('/registros', (req, res)=>{
+    app.get('/registros', (req, res)=>{
         User.getRegistro((err, data) => {
+            res.json(data)
+        });
+    });
+
+    app.get('/graficas', (req, res)=>{
+        User.getGrafica((err, data) => {
             res.json(data)
         });
     });
