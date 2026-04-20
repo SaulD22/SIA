@@ -90,11 +90,19 @@ userModel.insertRegistro = (userData, callback) => {
 }
 
 userModel.insertTabla = (userData, callback) => {
-	connection.insertData(
-		[userData.tipo_grafica, userData.nombre_archivo, userData.formato_imagen, userData.datos_binarios],
-		'INSERT INTO reportes_graficas (tipo_grafica, nombre_archivo, formato_imagen, datos_binarios) VALUES (?, ?, ?, ?)',
-		callback
-	);
+    // IMPORTANTE: Convertimos el string base64 que envía Python a binario (Buffer)
+    const bufferImagen = Buffer.from(userData.datos_binarios, 'base64');
+
+    connection.insertData(
+        [
+            userData.tipo_grafica, 
+            userData.nombre_archivo, 
+            userData.formato_imagen, 
+            bufferImagen // Pasamos el buffer, no el string
+        ],
+        'INSERT INTO reportes_graficas (tipo_grafica, nombre_archivo, formato_imagen, datos_binarios) VALUES (?, ?, ?, ?)',
+        callback
+    );
 }
 
 
