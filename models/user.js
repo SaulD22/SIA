@@ -41,6 +41,10 @@ userModel.getInformacion = (callback) => {
 	rows = connection.getData('SELECT a.id AS acceso_id, r.nombre AS nombre_usuario, a.fecha AS fecha_acceso FROM accesos a INNER JOIN registro r ON a.id_usuario = r.id;', callback);
 }
 
+userModel.getGrafica = (callback) => {
+	rows = connection.getData('SELECT * FROM reportes_graficas', callback);
+}
+
 /*
 userModel.getUsers = (callback) => {
 	if( connection ){
@@ -93,6 +97,9 @@ userModel.insertTabla = (userData, callback) => {
     // IMPORTANTE: Convertimos el string base64 que envía Python a binario (Buffer)
     const bufferImagen = Buffer.from(userData.datos_binarios, 'base64');
 
+
+
+	//Añadir
     connection.insertData(
         [
             userData.tipo_grafica, 
