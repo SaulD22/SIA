@@ -46,7 +46,7 @@ module.exports = function (app) {
     });
 
         app.get('/informacion', (req, res)=>{
-        User.getRegistro((err, data) => {
+        User.getInformacion((err, data) => {
             res.json(data)
         });
     });
