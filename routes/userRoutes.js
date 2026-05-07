@@ -36,10 +36,8 @@ module.exports = function (app) {
             return res.status(500).json({ error: 'Error al obtener las gráficas' });
         }
 
-        // 'data' es el arreglo de filas que viene de tu clase Connection
         const graficasListas = data.map(grafica => {
-            // Convertimos el Buffer binario a texto Base64
-            // NOTA: data.datos_binarios viene como Buffer desde el driver mysql2
+
             let base64String = grafica.datos_binarios.toString('base64');
             
             return {
@@ -47,12 +45,10 @@ module.exports = function (app) {
                 tipo_grafica: grafica.tipo_grafica,
                 nombre_archivo: grafica.nombre_archivo,
                 fecha_registro: grafica.fecha_registro,
-                // Creamos la cadena lista para que React la use en el <img>
                 imagen_url: `data:${grafica.formato_imagen};base64,${base64String}`
             };
         });
 
-        // Enviamos el JSON ya transformado a tu compañero de React
         res.json(graficasListas);
     });
 });
@@ -147,16 +143,23 @@ module.exports = function (app) {
         };
 
         User.insertRegistro(userData, (err, data) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    msg: 'Error al registrar usuario',
+                    error: err.sqlMessage || err
+                });
+            }
             if (data && data.affectedRows) {
                 res.status(200).json({
                     success: true,
-                    msg: 'dato insertado',
+                    msg: 'Usuario registrado correctamente',
                     data: data
                 });
             } else {
                 res.status(500).json({
                     success: false,
-                    msg: 'Error'
+                    msg: 'No se pudo insertar el registro'
                 });
             }
         });
