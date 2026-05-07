@@ -78,11 +78,11 @@ userModel.insertResult = (userData, callback) => {
 }
 
 userModel.insertAccess = (userData, callback) => {
-	connection.insertData(
-		[userData.id_usuario],
-		'INSERT INTO accesos (id_usuario) VALUES (?)',
-		callback
-	);
+    connection.insertData(
+        [userData.id_usuario],
+        'INSERT INTO accesos (id_usuario) VALUES (?)',
+        callback
+    ).catch(() => {});
 }
 
 userModel.insertRegistro = (userData, callback) => {

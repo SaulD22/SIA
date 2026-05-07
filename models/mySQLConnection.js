@@ -10,7 +10,7 @@ class Connection{
             port: rport,
             waitForConnections: true,
             connectionLimit: 10,
-            queueLimit: 0,
+            queueLimit: 0
         })
 
     }

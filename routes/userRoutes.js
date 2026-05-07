@@ -1,20 +1,5 @@
 const User = require('../models/user')
 
-const API_KEY = process.env.API_KEY;
-
-function verificarApiKey(req, res, next) {
-    const apiKey = req.header('x-api-key') || req.query.api_key;
-
-    if (!apiKey || apiKey !== API_KEY) {
-        return res.status(403).json({
-            success: false,
-            msg: 'No autorizado'
-        });
-    }
-
-    next();
-}
-
 module.exports = function (app) {
 
     app.get('/users', (req, res) => {
@@ -78,7 +63,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/metrics', verificarApiKey, (req, res) => {
+    app.post('/metrics', (req, res) => {
         const userData = {
             id: req.body.id,
             result: req.body.result
@@ -100,7 +85,7 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/users', verificarApiKey, (req, res) => {
+    app.post('/users', (req, res) => {
         const userData = {
             id: req.body.id,
             dato: req.body.dato,
@@ -123,29 +108,39 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/accesos', verificarApiKey, (req, res) => {
-        const userData = {
-            id_usuario: req.body.id_usuario,
-        };
+    app.post('/accesos', (req, res) => {
+    const userData = {
+        id_usuario: req.body.id_usuario,
+    };
 
-        User.insertAccess(userData, (err, data) => {
-            if (data && data.affectedRows) {
-                res.status(200).json({
-                    success: true,
-                    msg: 'dato insertado',
-                    data: data
-                });
-            } else {
-                res.status(500).json({
+    User.insertAccess(userData, (err, data) => {
+        if (err) {
+            if (err.errno === 1452) {
+                return res.status(400).json({
                     success: false,
-                    msg: 'Error'
+                    msg: `El usuario con ID ${userData.id_usuario} no está registrado en el sistema.`
                 });
             }
-        });
+            
+            return res.status(500).json({
+                success: false,
+                msg: 'Error interno del servidor',
+                error: err.sqlMessage
+            });
+        } 
+
+        if (data && data.affectedRows) {
+            res.status(200).json({
+                success: true,
+                msg: 'Acceso registrado correctamente',
+                data: data
+            });
+        }
     });
+});
 
     
-    app.post('/registro', verificarApiKey, (req, res) => {
+    app.post('/registro', (req, res) => {
         const userData = {
             id: req.body.id,
             nombre: req.body.nombre
@@ -167,7 +162,7 @@ module.exports = function (app) {
         });
     });
 
-        app.post('/reporte', verificarApiKey, (req, res) => {
+        app.post('/reporte', (req, res) => {
         const userData = {
             tipo_grafica: req.body.tipo_grafica,
             nombre_archivo: req.body.nombre_archivo,
