@@ -6,18 +6,6 @@ module.exports = function (app) {
         res.json('hola');
     });
 
-    app.get('/metrics', (req, res) => {
-        User.getMetrics((err, data) => {
-            res.json(data)
-        });
-    });
-
-    app.get('/users2', (req, res)=>{
-        User.getUsers((err, data) => {
-            res.json(data)
-        });
-    });
-
     app.get('/access', (req, res)=>{
         User.getAccess((err, data) => {
             res.json(data)
@@ -53,54 +41,9 @@ module.exports = function (app) {
     });
 });
 
-        app.get('/informacion', (req, res)=>{
+    app.get('/informacion', (req, res)=>{
         User.getInformacion((err, data) => {
             res.json(data)
-        });
-    });
-
-    app.post('/metrics', (req, res) => {
-        const userData = {
-            id: req.body.id,
-            result: req.body.result
-        };
-
-        User.insertResult(userData, (err, data) => {
-            if (data && data.affectedRows) {
-                res.status(200).json({
-                    success: true,
-                    msg: 'dato insertado',
-                    data: data
-                });
-            } else {
-                res.status(500).json({
-                    success: false,
-                    msg: 'Error'
-                });
-            }
-        });
-    });
-
-    app.post('/users', (req, res) => {
-        const userData = {
-            id: req.body.id,
-            dato: req.body.dato,
-            segundo: req.body.segundo
-        };
-
-        User.insertUser(userData, (err, data) => {
-            if(data && data.affectedRows){
-                res.status(200).json({
-                    success: true,
-                    msg: 'dato insertado',
-                    data: data
-                });
-            }else{
-                res.status(500).json({
-                    success: false,
-                    msg: 'Error'
-                });
-            }
         });
     });
 
@@ -114,7 +57,7 @@ module.exports = function (app) {
             if (err.errno === 1452) {
                 return res.status(400).json({
                     success: false,
-                    msg: `El usuario con ID ${userData.id_usuario} no está registrado en el sistema.`
+                    msg: `El usuario con ID ${userData.id_usuario} no está registrado.`
                 });
             }
             
@@ -165,7 +108,7 @@ module.exports = function (app) {
         });
     });
 
-        app.post('/reporte', (req, res) => {
+    app.post('/reporte', (req, res) => {
         const userData = {
             tipo_grafica: req.body.tipo_grafica,
             nombre_archivo: req.body.nombre_archivo,

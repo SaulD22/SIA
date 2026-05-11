@@ -21,14 +21,6 @@ const connection = new Connection(
 
 let userModel = {};
 
-userModel.getMetrics = (callback) => {
-	rows = connection.getData('SELECT * FROM result', callback);
-}
-
-userModel.getUsers = (callback) => {
-	rows = connection.getData('SELECT * FROM sensor', callback);
-}
-
 userModel.getAccess = (callback) => {
 	rows = connection.getData('SELECT * FROM accesos', callback);
 }
@@ -38,7 +30,7 @@ userModel.getRegistro = (callback) => {
 }
 
 userModel.getInformacion = (callback) => {
-	rows = connection.getData('SELECT a.id AS acceso_id, r.nombre AS nombre_usuario, a.fecha AS fecha_acceso FROM accesos a INNER JOIN registro r ON a.id_usuario = r.id;', callback);
+	rows = connection.getData('SELECT accesos.id, registro.nombre, accesos.fecha FROM accesos INNER JOIN registro ON accesos.id_usuario = registro.id;', callback);
 }
 
 userModel.getGrafica = (callback) => {
@@ -61,21 +53,6 @@ userModel.getUsers = (callback) => {
 	}
 };
 */
-userModel.insertUser = (userData, callback) => {
-	connection.insertData(
-		[userData.id, userData.dato, userData.segundo],
-		'INSERT INTO sensor (id, dato, segundo) VALUES (?, ?, ?)',
-		callback
-	);
-}
-
-userModel.insertResult = (userData, callback) => {
-	connection.insertData(
-		[userData.id, userData.result],
-		'INSERT INTO result (id, info) VALUES (?, ?)',
-		callback
-	);
-}
 
 userModel.insertAccess = (userData, callback) => {
     connection.insertData(
@@ -94,18 +71,15 @@ userModel.insertRegistro = (userData, callback) => {
 }
 
 userModel.insertTabla = (userData, callback) => {
-    // IMPORTANTE: Convertimos el string base64 que envía Python a binario (Buffer)
     const bufferImagen = Buffer.from(userData.datos_binarios, 'base64');
 
 
-
-	//Añadir
     connection.insertData(
         [
             userData.tipo_grafica, 
             userData.nombre_archivo, 
             userData.formato_imagen, 
-            bufferImagen // Pasamos el buffer, no el string
+            bufferImagen
         ],
         'INSERT INTO reportes_graficas (tipo_grafica, nombre_archivo, formato_imagen, datos_binarios) VALUES (?, ?, ?, ?)',
         callback
