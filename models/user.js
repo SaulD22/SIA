@@ -30,7 +30,7 @@ userModel.getRegistro = (callback) => {
 }
 
 userModel.getInformacion = (callback) => {
-	rows = connection.getData('SELECT accesos.id, registro.nombre, accesos.fecha FROM accesos INNER JOIN registro ON accesos.id_usuario = registro.id;', callback);
+	rows = connection.getData('SELECT a.id AS acceso_id, r.nombre AS nombre_usuario, a.fecha AS fecha_acceso FROM accesos a INNER JOIN registro r ON a.id_usuario = r.id;', callback);
 }
 
 userModel.getGrafica = (callback) => {

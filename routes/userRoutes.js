@@ -1,6 +1,6 @@
 const User = require('../models/user')
 
-module.exports = function (app) {
+module.exports = function (app, wss) {
 
     app.get('/users', (req, res) => {
         res.json('hola');
@@ -131,4 +131,30 @@ module.exports = function (app) {
             }
         });
     });
+
+    app.post('/solicitar-grafica', (req, res) => {
+        let señalEnviada = false;
+
+        const mensajePython = JSON.stringify({ accion: "generar_grafica" });
+
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(mensajePython);
+                señalEnviada = true;
+            }
+        });
+
+        if (señalEnviada) {
+            res.status(200).json({ 
+                success: true, 
+                msg: 'Solicitud enviada' 
+            });
+        } else {
+            res.status(503).json({ 
+                success: false, 
+                msg: 'Error: Ha ocurrido un error en el proceso' 
+            });
+        }
+    });
+
 }
