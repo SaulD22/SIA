@@ -37,16 +37,24 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server, path: '/ws' });
 
 wss.on('connection', (ws) => {
-    console.log('Cliente Python conectado al WebSocket');
+    console.log('Un modulo se ha conectado al WebSocket.');
 
     ws.on('close', () => {
-        console.log('Cliente Python desconectado del WebSocket');
+        console.log('Un modulo se ha desconectado del WebSocket');
     });
 });
 
-// routes
 require('./routes/userRoutes')(app, wss);
 
 server.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}, con WebSockets)`);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Error. El servidor intentó apagarse.');
+    console.error(error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Promesa fallida no manejada:', reason);
 });

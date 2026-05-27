@@ -33,20 +33,20 @@ class Connection{
         
     }
 
-    async getData(myquery, callback) {
+async getData(myquery, callback) {
         return new Promise((resolve, reject) => {
             this.pool.query(myquery, (err, result, fields) => {
                 if (err) {
                     reject(err)
+                    callback(err, null);
                 } else {
-
                     console.log('RESULTADO:' + result)
                     resolve(result) 
                     callback(null, result);
                 }
             })
         }) 
-    }
+    }   
 
     async insertData(values, myquery, callback) {
         return new Promise((resolve, reject) => {
