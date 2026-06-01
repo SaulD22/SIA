@@ -143,4 +143,17 @@ userModel.getGraficaComando = (comando, fecha, callback) => {
     connection.insertData([fecha], query, callback).catch(() => {});
 }
 
+// Verifica si hay al menos un acceso registrado en el día actual
+userModel.verificarAccesosHoy = (callback) => {
+    // Usamos CURRENT_DATE() de MySQL para sacar la fecha de hoy automáticamente
+    const query = 'SELECT COUNT(*) AS total FROM accesos WHERE DATE(fecha) = CURRENT_DATE()';
+    
+    connection.getData(query, (err, rows) => {
+        if (err) return callback(err, null);
+        
+        // rows[0].total tendrá un número (0, 1, 5, etc.)
+        callback(null, rows[0].total);
+    }).catch(() => {});
+};
+
 module.exports = userModel;

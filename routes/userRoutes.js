@@ -160,28 +160,44 @@ module.exports = function (app, wss) {
 
 
     app.post('/solicitar-grafica', (req, res) => {
-        let señalEnviada = false;
+        
+        User.verificarAccesosHoy((err, totalAccesos) => {
+            if (err) {
+                return res.status(500).json({ 
+                    success: false, 
+                    msg: 'Error interno al verificar los accesos de hoy' 
+                });
+            }
 
-        const mensajePython = JSON.stringify({ accion: "generar_grafica" });
+            if (totalAccesos === 0) {
+                return res.status(404).json({ 
+                    success: false, 
+                    msg: 'No hay accesos en el dia para realizar la grafica' 
+                });
+            }
 
-        wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(mensajePython);
-                señalEnviada = true;
+            let señalEnviada = false;
+            const mensajePython = JSON.stringify({ accion: "generar_grafica" });
+
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(mensajePython);
+                    señalEnviada = true;
+                }
+            });
+
+            if (señalEnviada) {
+                res.status(200).json({ 
+                    success: true, 
+                    msg: 'Solicitud enviada' 
+                });
+            } else {
+                res.status(503).json({ 
+                    success: false, 
+                    msg: 'Error: No se pudo contactar al motor de gráficas (Python desconectado)' 
+                });
             }
         });
-
-        if (señalEnviada) {
-            res.status(200).json({ 
-                success: true, 
-                msg: 'Solicitud enviada' 
-            });
-        } else {
-            res.status(503).json({ 
-                success: false, 
-                msg: 'Error: Ha ocurrido un error en el proceso' 
-            });
-        }
     });
 
     app.post('/consulta-graficas', (req, res) =>{
